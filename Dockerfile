@@ -1,13 +1,15 @@
 FROM shurshun/alpine-moscow
 
+LABEL author "Korviakov Andrey"
 LABEL maintainer "4lifenet@gmail.com"
 
 LABEL SERVICE_NAME="beanstalkd"
 
+ENV VERSION_BEANSTALKD="1.10"
+
 HEALTHCHECK --interval=30s --timeout=2s \
   CMD nc -zv localhost 11300 || exit 1
 
-ENV VERSION_BEANSTALKD="1.10"
 
 RUN addgroup -S beanstalkd && adduser -S -G beanstalkd beanstalkd
 
