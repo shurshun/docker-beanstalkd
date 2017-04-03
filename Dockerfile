@@ -7,8 +7,12 @@ LABEL SERVICE_NAME="beanstalkd"
 
 ENV VERSION_BEANSTALKD="1.10"
 
+ENV BEAN_HOST=127.0.0.1:11300
+ENV WARN_LIMIT=500
+ENV CRIT_LIMIT=1500
+
 HEALTHCHECK --interval=30s --timeout=2s \
-  CMD nc -zv localhost 11300 || exit 1
+  CMD /bin/beanschk -w ${WARN_LIMIT} -c ${CRIT_LIMIT} -h ${BEAN_HOST}
 
 
 RUN addgroup -S beanstalkd && adduser -S -G beanstalkd beanstalkd
@@ -26,6 +30,11 @@ RUN apk --update add --virtual build-dependencies \
   && apk del build-dependencies \
   && rm -rf /tmp/* \
   && rm -rf /var/cache/apk/*
+
+RUN \
+    BEANSCHK_VERSION=$(curl -s https://api.github.com/repos/shurshun/beanschk/tags | jq -r ".[0] .name") \
+    && curl -fSlL https://github.com/shurshun/beanschk/releases/download/${BEANSCHK_VERSION}/beanschk_${BEANSCHK_VERSION}_linux_amd64.tar.gz | tar -C /bin -zx
+
 
 RUN mkdir /var/lib/beanstalkd && chown beanstalkd:beanstalkd /var/lib/beanstalkd
 
