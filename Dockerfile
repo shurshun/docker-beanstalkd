@@ -1,19 +1,10 @@
 FROM shurshun/alpine-moscow
 
-LABEL author "Korviakov Andrey"
-LABEL maintainer "4lifenet@gmail.com"
-
 LABEL SERVICE_NAME="beanstalkd"
 
 ENV VERSION_BEANSTALKD="1.10"
 
-ENV BEAN_HOST=127.0.0.1:11300
-ENV WARN_LIMIT=500
-ENV CRIT_LIMIT=1500
-
-HEALTHCHECK --interval=30s --timeout=2s \
-  CMD /bin/beanschk -w ${WARN_LIMIT} -c ${CRIT_LIMIT} -h ${BEAN_HOST}
-
+HEALTHCHECK CMD /bin/beanschk
 
 RUN addgroup -S beanstalkd && adduser -S -G beanstalkd beanstalkd
 
