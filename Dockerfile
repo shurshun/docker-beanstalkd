@@ -19,4 +19,4 @@ RUN apk --update add --virtual build-dependencies \
 EXPOSE 11300
 
 ENTRYPOINT ["beanstalkd", "-l", "0.0.0.0", "-p", "11300"]
-CMD ["-b", "/data", "-f", "5000"]
+CMD ["-f", "5000"]
